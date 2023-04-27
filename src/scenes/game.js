@@ -4,6 +4,8 @@ export default class Game extends Phaser.Scene {
     hero = null
     cursors = null;
     rocks = null;
+    lasers = null;
+    nextShoot = 0;
     constructor() {
         super('game');
     }
@@ -40,11 +42,30 @@ export default class Game extends Phaser.Scene {
 		if (this.cursors.right.isDown) this.hero.x += 5;
         if (this.cursors.up.isDown) this.hero.y -= 5;
 		if (this.cursors.down.isDown) this.hero.y += 5;
+        if (this.cursors.space.isDown) this.fireLaser();
+    }
+
+    fireLaser() {
+        if(this.nextShoot > this.time.now) return;
+        this.nextShoot = this.time.now + 250;
+ 
+        const laser = this.physics.add.sprite(this.hero.x, this.hero.y, "laser");
+        laser.setVelocity(0, -500);
+
+        if(!this.lasers) {
+            this.lasers = this.add.group();
+            this.physics.add.collider(this.lasers, this.rocks, function (laser, rock) {
+                laser.scene.rocks.remove(rock, true, true);
+                laser.scene.lasers.remove(laser, true, true);
+            });     
+        }
+        this.lasers.add(laser);
     }
     
     preload() {
         this.load.image('ship', 'assets/sprites/player_ship.png');
         this.load.image('rock', 'assets/sprites/rock1.png');
+        this.load.image('laser', 'assets/sprites/player_laser.png')
     }
 
 }
