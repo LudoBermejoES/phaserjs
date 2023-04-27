@@ -1,8 +1,8 @@
 import Phaser from "../lib/phaser.js";
 
-export default class Intro extends Phaser.Scene {
+export default class Game extends Phaser.Scene {
     constructor() {
-        super('intro');
+        super('game');
     }
 
     create() {
