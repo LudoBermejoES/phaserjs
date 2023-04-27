@@ -5,4 +5,12 @@ export default new Phaser.Game({
      width: 800,
      height: 600,
      scene: Game,
+     physics: {
+          default: 'arcade',
+          arcade: {
+              gravity: {
+                  y: 0
+              },
+          }
+      },
 })
