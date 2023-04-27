@@ -71,6 +71,21 @@ export default class Game extends Phaser.Scene {
         if(!this.lasers) {
             this.lasers = this.add.group();
             this.physics.add.collider(this.lasers, this.rocks, function (laser, rock) {
+
+                const particles = rock.scene.add.particles('dust');
+                const emitter = particles.createEmitter({
+                    x: rock.x,
+                    y: rock.y,
+                    lifespan: 400,
+                    speed: { min: 150, max: 250 },
+                    scale: { start: 0.8, end: 0 },
+                    gravityY: 150,
+                    blendMode: 'ADD',
+                    emitting: false
+                });
+                
+                emitter.explode(16);
+
                 laser.scene.rocks.remove(rock, true, true);
                 laser.scene.lasers.remove(laser, true, true);
             });     
@@ -83,6 +98,7 @@ export default class Game extends Phaser.Scene {
         this.load.image('rock', 'assets/sprites/rock1.png');
         this.load.image('laser', 'assets/sprites/player_laser.png')
         this.load.atlas('flares', 'assets/particles/flares.png', 'assets/particles/flares.json');
+        this.load.image('dust', 'assets/sprites/dust_particle.png');
     }
 
 }
