@@ -2,20 +2,36 @@ import Phaser from "../lib/phaser.js";
 
 export default class Game extends Phaser.Scene {
     hero = null
-    rock = null;
     cursors = null;
+    rocks = null;
     constructor() {
         super('game');
     }
 
     create() {
-        this.hero = this.physics.add.sprite(320, 200, 'ship');
-        this.rock = this.physics.add.sprite(100, 100, "rock");
+        this.hero = this.physics.add.sprite(400, 550, 'ship');
         this.cursors = this.input.keyboard.createCursorKeys()
+        this.spawnEnemy();
+    }
 
-        this.physics.add.collider(this.hero, this.rock, function (hero, rock) {
-            rock.alpha = 0.5;
-        });                
+    spawnEnemy() {
+
+        const position = Phaser.Math.Between(0,800);
+        const speed = Phaser.Math.Between(200,400);
+        const rock = this.physics.add.sprite(position, -50, "rock");
+        rock.setVelocity(0, speed);
+
+        if(!this.rocks) {
+            this.rocks = this.add.group();
+            this.physics.add.collider(this.hero, this.rocks, function (hero, rock) {
+                hero.scene.rocks.remove(rock, true, true);
+                hero.setVelocity(0,0)
+            });     
+        }
+        this.rocks.add(rock);
+
+        const delay = Phaser.Math.Between(500,5000);
+        this.time.delayedCall(delay, this.spawnEnemy, {}, this); 
 
     }
 
