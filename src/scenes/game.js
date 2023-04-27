@@ -11,11 +11,27 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
+        this.createBackground();
         this.hero = this.physics.add.sprite(400, 550, 'ship');
         this.cursors = this.input.keyboard.createCursorKeys()
         this.spawnEnemy();
     }
 
+    createBackground() {
+        const particles = this.add.particles('flares');
+
+        particles.createEmitter({
+            frame: 'blue',
+            x: { min: 0, max: 800 },
+            y: 0,
+            lifespan: 10000,
+            speedY: { min: 200, max: 100 },
+            scale: { start: 0.1, end: 0.1 },
+            quantity: 2,
+            blendMode: 'ADD',
+            scrollFactorY: 0
+        });
+    }
     spawnEnemy() {
 
         const position = Phaser.Math.Between(0,800);
@@ -66,6 +82,7 @@ export default class Game extends Phaser.Scene {
         this.load.image('ship', 'assets/sprites/player_ship.png');
         this.load.image('rock', 'assets/sprites/rock1.png');
         this.load.image('laser', 'assets/sprites/player_laser.png')
+        this.load.atlas('flares', 'assets/particles/flares.png', 'assets/particles/flares.json');
     }
 
 }
